@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>QR Scanner Test</title>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #qr-reader { width: 100%; max-width: 400px; margin: 0 auto; }
+    #error { color: red; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>QR Scanner Test</h2>
+  <div id="qr-reader"></div>
+  <p><strong>Scanned Code:</strong> <span id="scannedCode">None</span></p>
+  <div id="error"></div>
+
+  <script>
+    const qrScanner = new Html5Qrcode("qr-reader");
+    Html5Qrcode.getCameras().then(devices => {
+      if (devices && devices.length) {
+        qrScanner.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: 250 },
+          decodedText => {
+            document.getElementById("scannedCode").textContent = decodedText;
+          }
+        );
+      } else {
+        document.getElementById("error").innerText = "No camera found.";
+      }
+    }).catch(err => {
+      document.getElementById("error").innerText = "Camera error: " + err;
+    });
+  </script>
+</body>
+</html>
